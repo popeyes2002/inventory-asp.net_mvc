@@ -1,0 +1,229 @@
+﻿@page "/menu"
+@inject HttpClient Http
+@using Inventory.Shared
+
+<div class="container-fluid times-new text-black">
+    <div class="row" style="margin-right:0;">
+        <!-- Left side -->
+        <div class="col-custom-7 cards-scroll"
+             style="max-height:calc(100vh - 100px); overflow-y:auto; overflow-x:hidden; padding-bottom:10px; margin-right:400px;">
+            <!-- Categories -->
+            <div class="d-flex justify-content-between category-title mt-3 mb-3 flex-wrap">
+                <div class="category text-center">
+                    <i class="bi bi-border-all icon"></i>
+                    <h6>All</h6>
+                    <span>235 Items</span>
+                </div>
+                <div class="category text-center">
+                    <i class="bi bi-cup-hot icon"></i>
+                    <h6>Drinks</h6>
+                    <span>120 Items</span>
+                </div>
+                <div class="category text-center">
+                    <i class="bi bi-fork-knife icon"></i>
+                    <h6>Meals</h6>
+                    <span>85 Items</span>
+                </div>
+                <div class="category text-center">
+                    <i class="bi bi-egg-fried icon"></i>
+                    <h6>Breakfast</h6>
+                    <span>30 Items</span>
+                </div>
+                <div class="category text-center">
+                    <i class="bi bi-egg-fill icon"></i>
+                    <h6>Eggs</h6>
+                    <span>50 Items</span>
+                </div>
+                <div class="category text-center">
+                    <i class="bi bi-apple icon"></i>
+                    <h6>Fruits</h6>
+                    <span>60 Items</span>
+                </div>
+            </div>
+
+            <!-- Cards Grid -->
+            <div class="row">
+                @if (foods == null)
+                {
+                    <p>Loading...</p>
+                }
+                else
+                {
+                    @foreach (var food in foods)
+                    {
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-pic position-relative">
+                                    <img src="data:image/png;base64,@food.PictureBase64"
+                                         class="card-image" alt="@food.Name" />
+                                </div>
+                                <div class="card-sub">
+                                    <h3 class="card-sub-name">@food.Name</h3>
+                                    <div class="card-sub-price d-flex align-items-center justify-content-between">
+                                        <h2 class="sub-price mb-0 me-2">$@food.Price</h2>
+                                        <div>
+                                            <span class="rounded-circle @(food.Type == "Veggie" ? "bg-success" : "bg-danger")"
+                                                  style="width:10px; height:10px; display:inline-block;"></span>
+                                            <span class="sub-category">@food.Type</span>
+                                        </div>
+                                    </div>
+                                    <div class="quantity-selector">
+                                        <button class="qty-btn">-</button>
+                                        <span class="qty-value fw-light">1</span>
+                                        <button class="qty-btn">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Right side (fixed size) -->
+        <div class="position-fixed end-0 top-0 container-fluid p-0 bg-white"
+             style="height:100vh; overflow:hidden; width:450px; min-width:450px;">
+            <div class="table-first d-flex justify-content-between align-items-center border-bottom border-top">
+                <div class="">
+                    <h5 class="mb-0 table-h1">Table</h5>
+                    <span class="table-span">Floyd Miles</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center ">
+                    <i class="bi bi-pencil table-icon"></i>
+                </div>
+            </div>
+            <div class="dine-but d-flex justify-content-between border-bottom">
+                <button class="dine-button">Dine in</button>
+                <button class="dine-button2">Take away</button>
+                <button class="dine-button2">Delivery</button>
+            </div>
+            <div class="scrollable cards-scroll">
+                <div class="scrollable-items d-flex align-items-center">
+                    <div class="scrollable-items-image-background">
+                        <img src="images/webpage.jpg" class="scrollable-items-image" alt="All" />
+                    </div>
+                    <div class="container-fluid scrollable-items-name">
+                        <h3 class="mb-1">Original Chess Meat Burger With Chips</h3>
+                        <h3 class="mb-1">(Non Veg)</h3>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-success">$14.6</span>
+                            <span class="text-muted fw-light">1x</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="scrollable-items d-flex align-items-center">
+                    <div class="scrollable-items-image-background">
+                        <img src="images/webpage.jpg" class="scrollable-items-image" alt="All" />
+                    </div>
+                    <div class="container-fluid scrollable-items-name">
+                        <h3 class="mb-1">Original Chess Meat Burger With Chips</h3>
+                        <h3 class="mb-1">(Non Veg)</h3>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-success">$14.6</span>
+                            <span class="text-muted fw-light">1x</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="scrollable-items d-flex align-items-center">
+                    <div class="scrollable-items-image-background">
+                        <img src="images/webpage.jpg" class="scrollable-items-image" alt="All" />
+                    </div>
+                    <div class="container-fluid scrollable-items-name">
+                        <h3 class="mb-1">Original Chess Meat Burger With Chips</h3>
+                        <h3 class="mb-1">(Non Veg)</h3>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-success">$14.6</span>
+                            <span class="text-muted fw-light">1x</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="scrollable-items d-flex align-items-center">
+                    <div class="scrollable-items-image-background">
+                        <img src="images/webpage.jpg" class="scrollable-items-image" alt="All" />
+                    </div>
+                    <div class="container-fluid scrollable-items-name">
+                        <h3 class="mb-1">Original Chess Meat Burger With Chips</h3>
+                        <h3 class="mb-1">(Non Veg)</h3>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="green">$14.6</span>
+                            <span class="text-muted">1x</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="subtotal">
+                <div class="subtotal-table container-fluid">
+                    <table class="table table-borderless container-fluid">
+                        <tbody>
+                            <tr>
+                                <td>Subtotal</td>
+                                <td class="text-end">$61.96</td>
+                            </tr>
+                            <tr>
+                                <td>Tax 5%</td>
+                                <td class="text-end">$3.10</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">Total Amount</td>
+                                <td class="fw-bold text-end">$65.06</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="payment">
+                <div class="payment-buttons d-flex gap-3">
+                    <button class="payment-buttons-desc">
+                        <i class="bi bi-cash"></i>
+                        <span>Cash</span>
+                    </button>
+                    <button class="payment-buttons-desc">
+                        <i class="bi bi-credit-card"></i>
+                        <span>Card</span>
+                    </button>
+                    <button class="payment-buttons-desc">
+                        <i class="bi bi-phone"></i>
+                        <span>Gcash</span>
+                    </button>
+                </div>
+                <button class="place-order container-fluid">
+                    <span>Place Order</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer bg-white footer1 d-flex justify-content-between align-items-center times-new"
+        style="height:85px; position:fixed; bottom:0; left:0; right:0; z-index:1030;">
+    <div class="process">
+        <div class="process-circle">TS</div>
+        <div class="process-label">
+            <h3>6 Items > Kitchen</h3>
+            <span>Process</span>
+        </div>
+    </div>
+    <div class="process">
+        <div class="process-circle">TS</div>
+        <div class="process-label">
+            <h3>6 Items > Kitchen</h3>
+            <span>Process</span>
+        </div>
+    </div>
+    <div class="process">
+        <div class="process-circle">TS</div>
+        <div class="process-label">
+            <h3>6 Items > Kitchen</h3>
+            <span>Process</span>
+        </div>
+    </div>
+</footer>
+
+@code {
+    private List<Food>? foods;
+
+    protected override async Task OnInitializedAsync()
+    {
+        foods = await Http.GetFromJsonAsync<List<Food>>("api/Food");
+    }
+}

@@ -1,0 +1,8 @@
+/* Active Menu Item - Icon Background */
+.rz-navigation-item.rz-state-active .rz-navigation-item-icon {
+    background-color: green; /* Change to your preferred green shade */
+    color: white; /* Makes icon more visible */
+    border-radius: 6px; /* Optional: rounded corners */
+    padding: 6px; /* Optional: spacing */
+}
+

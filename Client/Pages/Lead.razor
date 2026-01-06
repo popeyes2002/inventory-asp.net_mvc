@@ -1,0 +1,148 @@
+﻿@page "/lead"
+@inject HttpClient Http
+@using Inventory.Shared
+
+<div class="head-title-box mb-3">
+    <div class="row align-items-center length">
+        <div class="col-8">
+            <h3 class="head-title-font">Lead: Learning and Development</h3>
+            <span class="head-description">
+                Identify and address competency gaps...
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="form">
+    <div class="form-header">
+        <span class="form-header-title">LeaD</span>
+    </div>
+    <div class="form-name-color">
+        <div class="form-name d-flex justify-content-between">
+            <span class="form-name-font">List of Individual Plan</span>
+            <div>
+                <button class="btn btn-secondary me-2" @onclick="LoadItems">Retrieve Data</button>
+            </div>
+        </div>
+
+        <div class="add pt-3 pb-3">
+            <button class="btn add-button-icon" @onclick="OpenModal">
+                <i class="bi bi-plus-circle fs-1"></i>
+            </button>
+        </div>
+
+        <div class="px-2 py-2">
+            <div class="row form-column-name fw-bold border-bottom pb-2">
+                <div class="col">Item Id</div>
+                <div class="col">Item Name</div>
+                <div class="col">Quantity</div>
+                <div class="col">Price</div>
+                <div class="col">Action</div>
+            </div>
+
+            @foreach (var item in items)
+            {
+                <div class="row border-top py-2 align-items-center">
+                    <div class="col">@item.Id</div>
+                    <div class="col">@item.Name</div>
+                    <div class="col">@item.Quantity</div>
+                    <div class="col">@item.Price</div>
+                    <div class="col">
+                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteItem(item.Id)">Delete</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Item</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Item Name</label>
+                        <input type="text" class="form-control" @bind="newItem.Name" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" class="form-control" @bind="newItem.Quantity" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Price</label>
+                        <input type="number" class="form-control" @bind="newItem.Price" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseModal">Cancel</button>
+                    <button class="btn btn-primary" @onclick="SaveItem">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool showModal = false;
+    private Item newItem = new Item();
+    private List<Item> items = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await RetrieveItemsAsync();
+    }
+
+    private void OpenModal()
+    {
+        newItem = new Item();
+        showModal = true;
+    }
+
+    private void CloseModal() => showModal = false;
+
+    private async Task SaveItem()
+{
+    var response = await Http.PostAsJsonAsync("api/item/insert", newItem);
+    if (response.IsSuccessStatusCode)
+    {
+        var createdItem = await response.Content.ReadFromJsonAsync<Item>();
+        if (createdItem != null)
+            items.Add(createdItem); // now has Id
+
+        CloseModal();
+        newItem = new Item();
+    }
+}
+
+    private async Task DeleteItem(string id)
+    {
+        var response = await Http.DeleteAsync($"api/item/{id}");
+        if (response.IsSuccessStatusCode)
+        {
+            items.RemoveAll(x => x.Id == id);
+        }
+    }
+
+    private async Task LoadItems()
+    {
+        items = await RetrieveItemsAsync();
+    }
+
+    private async Task<List<Item>> RetrieveItemsAsync()
+    {
+        try
+        {
+            return await Http.GetFromJsonAsync<List<Item>>("api/item") ?? new List<Item>();
+        }
+        catch
+        {
+            return new List<Item>();
+        }
+    }
+}

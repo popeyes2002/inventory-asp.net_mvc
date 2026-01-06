@@ -1,0 +1,47 @@
+﻿@inherits LayoutComponentBase
+<RadzenDialog />
+<RadzenNotification />
+<RadzenContextMenu />
+
+<HeadContent>
+    <RadzenTheme Theme="material" />
+</HeadContent>
+
+<RadzenComponents />
+
+<RadzenLayout>
+    <!-- Removed Header -->
+
+    <RadzenSidebar Responsive="false" Style="@SidebarWidth" Class="radzen-sidebar custom-sidebar">
+        <RadzenPanelMenu DisplayStyle="@(sidebarExpanded? MenuItemDisplayStyle.IconAndText: MenuItemDisplayStyle.Icon)" ShowArrow="false">
+            <!-- Toggle Sidebar Menu Item -->
+            <RadzenPanelMenuItem Text="" Icon="menu" Click="@((args) => ToggleSidebar())" />
+            <RadzenPanelMenuItem Text="Overview" Icon="home" Path="/" />
+            <RadzenPanelMenuItem Text="Menu" Icon="dashboard" Path="/menu" />
+            <RadzenPanelMenuItem Text="Reservation" Icon="assignment" Path="/lead" />
+            <RadzenPanelMenuItem Text="Delivery" Icon="motorcycle" Path="/delivery" />
+            <RadzenPanelMenuItem Text="AddItem" Icon="assessment" Path="/add" />
+            <RadzenPanelMenuItem Text="Account" Icon="assessment" Path="/accounts" />
+        </RadzenPanelMenu>
+    </RadzenSidebar>
+
+    <RadzenBody Style="padding:0; margin:0;">
+        <div style="padding:0; margin:0; width:100%; height:100%;">
+            @Body
+        </div>
+    </RadzenBody>
+
+</RadzenLayout>
+
+@code {
+    bool sidebarExpanded = true;
+
+    string SidebarWidth => sidebarExpanded ? "width:310px;" : "width:65px;";
+
+    void ToggleSidebar()
+    {
+        sidebarExpanded = !sidebarExpanded;
+    }
+}
+
+

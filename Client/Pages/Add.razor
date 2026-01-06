@@ -1,0 +1,100 @@
+﻿@page "/add"
+@using Inventory.Shared
+@inject HttpClient Http
+
+<h1>Add Food</h1>
+
+<!-- Add Button -->
+<div>
+    <button class="btn btn-primary" @onclick="OpenModal">
+        <i class="bi bi-plus-circle-fill"></i> Add
+    </button>
+</div>
+
+<!-- Modal -->
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Food</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" @bind="food.Name" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" class="form-control" @bind="food.Quantity" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Price</label>
+                        <input type="number" class="form-control" @bind="food.Price" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Type</label>
+                        <select class="form-select" @bind="food.Type">
+                            <option value="Non-Veggie">Non-Veggie</option>
+                            <option value="Veggie">Veggie</option>
+                        </select>
+                    </div>
+
+                    <!-- Picture Upload -->
+                    <div class="mb-3">
+                        <label class="form-label">Picture</label>
+                        <InputFile OnChange="HandleFileSelected" />
+                    </div>
+
+                    <!-- Preview -->
+                    @if (!string.IsNullOrEmpty(food.PictureBase64))
+                    {
+                        <div class="mb-3">
+                            <img src="data:image/png;base64,@food.PictureBase64"
+                                 style="max-width: 150px; border:1px solid #ccc; padding:4px;" />
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseModal">Cancel</button>
+                    <button class="btn btn-success" @onclick="SaveFood">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool showModal = false;
+    private Food food = new();
+
+    void OpenModal()
+    {
+        food = new Food { Type = "Non-Veggie" };
+        showModal = true;
+    }
+
+    void CloseModal()
+    {
+        showModal = false;
+    }
+
+    async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        // Convert to base64 for preview + storage
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+        food.PictureBase64 = Convert.ToBase64String(buffer);
+    }
+
+    async Task SaveFood()
+    {
+        // POST to your API
+        await Http.PostAsJsonAsync("api/Food/insert", food);
+        showModal = false;
+    }
+}

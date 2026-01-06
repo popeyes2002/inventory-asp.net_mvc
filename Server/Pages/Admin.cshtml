@@ -1,0 +1,7 @@
+﻿@page
+@using Microsoft.AspNetCore.Authorization
+@model Server.Pages.AdminModel
+@attribute [Authorize(Roles = "Admin")]
+
+<h1>Admin Dashboard</h1>
+<p>Welcome, Admin! This page is only accessible by admins.</p>
